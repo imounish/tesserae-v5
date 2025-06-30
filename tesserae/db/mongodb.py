@@ -24,7 +24,7 @@ use the `pymongo`_ library.
 
 """
 
-from collections import Iterable, Mapping
+from collections.abc import Iterable, Mapping
 import datetime
 try:
     # Python 3.x
