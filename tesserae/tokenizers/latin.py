@@ -2,7 +2,8 @@ import collections
 import re
 import unicodedata
 
-from cltk.stem.latin.j_v import JVReplacer
+# from cltk.stem.latin.j_v import JVReplacer
+from cltk.alphabet.lat import JVReplacer
 from tesserae.db.entities import Token
 from tesserae.features import get_featurizer
 from tesserae.features.lemmata import get_lemmatizer
@@ -16,10 +17,9 @@ class LatinTokenizer(BaseTokenizer):
 
         # Set up patterns that will be reused
         self.jv_replacer = JVReplacer()
-        self.lemmatizer = get_lemmatizer('latin')
+        self.lemmatizer = get_lemmatizer("latin")
 
-        self.split_pattern = \
-            '( / )|([\\s]+)|([^\\w' + self.diacriticals + ']+)'
+        self.split_pattern = "( / )|([\\s]+)|([^\\w" + self.diacriticals + "]+)"
 
     def normalize(self, raw, split=True):
         """Normalize a Latin word.
@@ -46,12 +46,8 @@ class LatinTokenizer(BaseTokenizer):
         normalized = self.jv_replacer.replace(normalized)
 
         if split:
-            normalized = re.split(self.split_pattern,
-                                  normalized,
-                                  flags=re.UNICODE)
-            normalized = [
-                t for t in normalized if t and self.word_regex.search(t)
-            ]
+            normalized = re.split(self.split_pattern, normalized, flags=re.UNICODE)
+            normalized = [t for t in normalized if t and self.word_regex.search(t)]
 
         return normalized, tags
 
@@ -104,15 +100,14 @@ class LatinTokenizer(BaseTokenizer):
             lem_lemmata = [l[0] for l in lem[1]]
             fixed_lemmata.append(lem_lemmata)
 
-
-#        print("fixed lemmata:", fixed_lemmata)
+        #        print("fixed lemmata:", fixed_lemmata)
         grams = trigrammify(tokens)
-        synonymify = get_featurizer('latin', 'semantic')
-        synonymilemmafy = get_featurizer('latin', 'semantic + lemmata')
+        synonymify = get_featurizer("latin", "semantic")
+        synonymilemmafy = get_featurizer("latin", "semantic + lemmata")
         features = {
-            'lemmata': fixed_lemmata,
-            'sound': grams,
-            'semantic': synonymify(tokens),
-            'semantic + lemmata': synonymilemmafy(tokens)
+            "lemmata": fixed_lemmata,
+            "sound": grams,
+            "semantic": synonymify(tokens),
+            "semantic + lemmata": synonymilemmafy(tokens),
         }
         return features

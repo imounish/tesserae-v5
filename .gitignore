@@ -13,3 +13,5 @@ _build
 .vscode
 *env/
 *.swp
+build/*
+*.egg-info/*
